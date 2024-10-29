@@ -1,0 +1,238 @@
+<style>
+  #cartdiv {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 15px;
+    background-color: #f5f5dc;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  #cartdiv h3 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 15px;
+  }
+
+  /* Table Styles */
+  #cartdiv #carttb {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  #cartdiv #carttb th,
+  #cartdiv #carttb td {
+    padding: 10px;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
+  #cartdiv #carttb thead {
+    background-color: #0b0b0b;
+    color: white;
+  }
+
+  #cartdiv #carttb tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  #cartdiv #carttb tr td:last-child {
+    font-weight: bold;
+    color: #007bff;
+  }
+
+  /* Coupon and Price Detail Sections */
+  #cartdiv #couponprice {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  #cartdiv #coupon,
+  #cartdiv #pricediv {
+    flex: 1;
+    background-color: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+  }
+
+  #cartdiv #coupon p,
+  #cartdiv #pricediv p {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  #cartdiv #coupon1 {
+    display: flex;
+    gap: 10px;
+  }
+
+  #cartdiv #coupontext {
+    flex: 1;
+    padding: 8px;
+  }
+
+  #cartdiv #couponbtn {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  /* Price detail table */
+  #cartdiv #pricediv table {
+    width: 100%;
+    margin-top: 8px;
+    border-collapse: collapse;
+  }
+
+  #cartdiv #pricediv table td {
+    padding: 6px 0;
+  }
+
+  #cartdiv #pricediv table td:last-child {
+    text-align: right;
+    font-weight: bold;
+  }
+
+  /* Confirm Payment Button */
+  #cartdiv #rzp-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  #cartdiv #rzp-button:hover {
+    background-color: #218838;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    #cartdiv {
+      margin: 20px 10px;
+    }
+    #cartdiv #carttb th,
+    #cartdiv #carttb td {
+      font-size: 0.6rem;
+      padding: 8px;
+    }
+
+    #cartdiv #carttb thead {
+      font-size: 0.7rem;
+    }
+
+    #cartdiv #couponprice {
+      flex-direction: column;
+    }
+
+    #cartdiv #pricediv table td {
+      font-size: 0.7rem;
+    }
+
+    #cartdiv #rzp-button {
+      padding: 10px;
+      font-size: 0.7rem;
+    }
+  }
+</style>
+<% layout('layouts/boilerplate')%>
+<div id="cartdiv">
+  <h3>Shopping Cart</h3>
+  <table id="carttb" class="table table-bordered border-dark">
+    <thead class="table-primary">
+      <tr>
+        <th scope="col">Product Name</th>
+        <th scope="col">Unit price</th>
+        <th scope="col">Required Quantity</th>
+        <th scope="col">Actual Price</th>
+        <th scope="col">Discount Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% let totalprice = 0; %> <% cartProducts.forEach(function(prd, index) {
+      let aprice = prd.price * prd.rqty; let dprice = aprice; let dis = 0; if
+      (prd.rqty < 100) { dprice = Math.floor(aprice * 1); dis = 0; } else if
+      (prd.rqty >= 100 && prd.rqty < 500) { dprice = Math.floor(aprice * 0.95);
+      dis = -5; } else if (prd.rqty >= 500 && prd.rqty < 1000) { dprice =
+      Math.floor(aprice * 0.90); dis = -10; } else if (prd.rqty >= 1000 &&
+      prd.rqty < 10000) { dprice = Math.floor(aprice * 0.85); dis = -15; } else
+      if (prd.rqty >= 10000 && prd.rqty < 25000) { dprice = Math.floor(aprice *
+      0.80); dis = -20; } else if (prd.rqty >= 25000 && prd.rqty < 50000) {
+      dprice = Math.floor(aprice * 0.75); dis = -25; } else if (prd.rqty >=
+      50000) { dprice = Math.floor(aprice * 0.70); dis = -30; } totalprice +=
+      dprice; %>
+      <tr>
+        <td><%= prd.name %></td>
+        <td><%= prd.price %></td>
+        <td><%= prd.rqty %></td>
+        <td>&#8377; <%= aprice %></td>
+        <td>
+          &#8377; <%= dprice %>
+          <p style="color: #08af2c; font-weight: bold">
+            <b><%= dis%>%off</b>
+          </p>
+        </td>
+      </tr>
+      <% }); %> <% let discount = 0; let subtotal = totalprice - discount; let
+      gst = Math.floor(subtotal * 0.18); let total = Math.floor(subtotal + gst);
+      %>
+      <tr>
+        <td colspan="4">Total</td>
+        <td><b>&#8377; <%= totalprice %></b></td>
+      </tr>
+    </tbody>
+  </table>
+  <div id="couponprice">
+    <div id="coupon">
+      <p>Have coupon?</p>
+      <div id="coupon1">
+        <input type="text" class="form-control" id="coupontext" />
+        <button type="button" class="btn btn-primary" id="couponbtn">
+          Apply
+        </button>
+      </div>
+    </div>
+    <div id="pricediv">
+      <p><b>PRICE DETAIL</b></p>
+      <table class="table">
+        <tbody>
+          <tr>
+            <td>Items Price:</td>
+            <td>&#8377;<%= totalprice %></td>
+          </tr>
+          <tr>
+            <td>Coupon Discount:</td>
+            <td>&#8377;<%= discount %></td>
+          </tr>
+          <tr>
+            <td>Subtotal:</td>
+            <td>&#8377;<%= subtotal %></td>
+          </tr>
+          <tr>
+            <td>GST:</td>
+            <td>&#8377;<%= gst %></td>
+          </tr>
+          <tr>
+            <td>Total:</td>
+            <td>&#8377;<%= total %></td>
+          </tr>
+        </tbody>
+      </table>
+      <form action="/payment/<%= total %>" method="post">
+        <button type="submit" class="btn btn-success" id="rzp-button">
+          Confirm Payment
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

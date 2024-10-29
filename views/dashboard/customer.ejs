@@ -1,0 +1,106 @@
+<style>
+  #dashboard {
+    margin: 40px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: antiquewhite;
+    text-align: center;
+  }
+  ul button {
+    margin: 10px;
+    width: 250px;
+  }
+  #carouselExample {
+    width: 800px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #imageform {
+    display: flex;
+    justify-content: center;
+  }
+</style>
+<% layout('layouts/boilerplate')%>
+<div class="container mt-4">
+  <!-- Upload Form (Visible only for admin) -->
+  <% if (user.role === 'admin') { %>
+  <form
+    action="/upload"
+    method="POST"
+    enctype="multipart/form-data"
+    class="mb-4"
+    id="imageform"
+  >
+    <div class="form-group">
+      <input type="file" name="image" required class="form-control-file" />
+    </div>
+    <button type="submit" class="btn btn-primary">Upload Image</button>
+  </form>
+  <% } %>
+
+  <!-- Carousel -->
+  <div
+    id="imageCarousel"
+    class="carousel slide"
+    data-ride="carousel"
+    data-interval="3000"
+  >
+    <div class="carousel-inner">
+      <% images.forEach((image, index) => { %>
+      <div
+        class="carousel-item <%= index === 0 ? 'active' : '' %>"
+        data-bs-interval="2"
+      >
+        <img
+          src="/uploads/<%= image.filename %>"
+          class="d-block w-100"
+          alt="Image"
+          style="height: 500px"
+        />
+        <div class="carousel-caption d-none d-md-block">
+          <% if (user.role === 'admin') { %>
+          <form action="/delete/<%= image._id %>" method="POST">
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+          <% } %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <a
+      class="carousel-control-prev"
+      href="#imageCarousel"
+      role="button"
+      data-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a
+      class="carousel-control-next"
+      href="#imageCarousel"
+      role="button"
+      data-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+</div>
+
+<div id="dashboard" class="">
+  <h1>Welcome, <%=user.name%></h1>
+  <p>This is the Your dashboard where you can manage your Profile.</p>
+  <!-- Admin specific actions can go here -->
+  <ul type="none">
+    <li>
+      <a href="/profileDetails"
+        ><button type="button" class="btn btn-primary">Manage Profile</button>
+      </a>
+    </li>
+  </ul>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

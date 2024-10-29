@@ -1,0 +1,33 @@
+<style>
+  #all {
+    margin: 20px;
+    padding: 20px;
+    background-color: aliceblue;
+  }
+</style>
+<% layout('layouts/boilerplate')%>
+<div id="all">
+  <h3 style="text-align: center">All Your Customers</h3>
+  <table id="accountingtb" class="table table-bordered border-primary">
+    <thead class="table-primary">
+      <tr>
+        <th scope="col">SlNo.</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Mobile</th>
+        <th scope="col">Wallet</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%for(let a of allCustomers){ let i=0; i=i+1%>
+      <tr>
+        <td><b><%=i%></b></td>
+        <td><%=a.name%></td>
+        <td><%=a.email%></td>
+        <td><%=a.mobile%></td>
+        <td>&#8377; <%=a.wallet%></td>
+      </tr>
+      <%}%>
+    </tbody>
+  </table>
+</div>

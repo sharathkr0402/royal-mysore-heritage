@@ -1,0 +1,145 @@
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  main {
+    flex-grow: 1; /* This makes the main content area grow to fill the available space */
+  }
+
+  /* Footer Styles */
+  footer {
+    background-color: rgb(57, 52, 52);
+    width: 100%;
+    padding-bottom: 1rem;
+  }
+
+  .about {
+    background-color: rgb(13, 16, 99);
+    padding: 10px;
+  }
+
+  .about .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 10px;
+  }
+
+  .about a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 5px;
+  }
+
+  .about a:hover {
+    color: #ddd;
+  }
+
+  .copyright {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px 0;
+    background-color: rgb(57, 52, 52);
+  }
+
+  .copyright .text-light {
+    color: white;
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+
+  .contact {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .contact a {
+    color: white;
+    font-size: 1.5rem;
+    padding: 4px 10px;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .contact a:hover {
+    color: black;
+    background-color: white;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .about .container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .about a {
+      font-size: 0.9rem;
+    }
+
+    .copyright {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .contact {
+      gap: 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .about a {
+      font-size: 0.8rem;
+    }
+
+    .contact a {
+      font-size: 1.3rem;
+    }
+  }
+</style>
+<body>
+  <main>
+    <!-- Main content goes here -->
+  </main>
+
+  <footer class="footer">
+    <div class="about">
+      <div class="container fw-bold">
+        <a href="/about"> About Royal Mysore Heritage</a>
+        <a href="/contact"> Contact us</a>
+        <a href="/terms"> Terms & Conditions</a>
+        <a href="/privacy"> Privacy Policy</a>
+        <a href="/refund"> Refund Policy</a>
+      </div>
+    </div>
+    <div class="container copyright">
+      <span class="text-light">&copy; ROYAL MYSORE HERITAGE</span>
+      <div class="contact">
+        <a href=""><i class="fa-brands fa-whatsapp"></i></a>
+        <a href=""><i class="fa-brands fa-facebook"></i></a>
+        <a href=""><i class="fa-brands fa-twitter"></i></a>
+        <a href=""><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>

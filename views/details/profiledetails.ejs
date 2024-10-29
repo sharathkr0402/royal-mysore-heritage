@@ -1,0 +1,59 @@
+<style>
+  #profilediv {
+    margin: 20px;
+    padding: 0px 20px;
+    width: 650px;
+    position: relative;
+    transform: translate(50%);
+  }
+  #profilediv h3 {
+    text-align: center;
+  }
+  #profilediv td {
+    padding: 12px;
+  }
+  #mmdiv {
+    background-color: antiquewhite;
+    margin: 20px 100px;
+    border-radius: 10px;
+    padding-bottom: 20px;
+  }
+</style>
+<% layout('layouts/boilerplate')%>
+<div id="mmdiv">
+  <div id="profilediv">
+    <h3>Profile Details</h3>
+    <table class="table table-primary table-bordered border-primary">
+      <tbody>
+        <tr>
+          <td style="width: 150px">Role</td>
+          <td><%=user.role%></td>
+        </tr>
+        <tr>
+          <td>Name</td>
+          <td><%=user.name%></td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td><%=user.email%></td>
+        </tr>
+        <tr>
+          <td>Mobile</td>
+          <td><%=user.mobile%></td>
+        </tr>
+        <tr>
+          <td>Address</td>
+          <td><%=user.address%></td>
+        </tr>
+        <tr>
+          <td>Wallet</td>
+          <td><b> &#8377; <%=user.wallet%></b></td>
+        </tr>
+        <tr>
+          <td>Registered Date</td>
+          <td><%=user.date.slice(0,10)%></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

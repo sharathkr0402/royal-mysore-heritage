@@ -1,0 +1,122 @@
+<style>
+  #otp-div {
+    width: 100%;
+    max-width: 400px; /* Set a max-width for responsiveness */
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #f5f5dc;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow for modern look */
+  }
+
+  #otp-div h3 {
+    background-color: #0275d8;
+    color: white;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  #otp-div a {
+    text-decoration: none;
+    color: #0275d8;
+  }
+
+  #otp-form {
+    display: flex;
+    flex-direction: column; /* Stack inputs vertically */
+    gap: 15px; /* Space between inputs */
+    margin-bottom: 20px;
+  }
+
+  #otp-form label {
+    text-align: left;
+    font-weight: bold;
+  }
+
+  #otp-form input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+
+  #otp-div button {
+    width: 100%;
+    padding: 12px;
+    background-color: #0275d8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  #otp-div button:hover {
+    background-color: #025aa5;
+  }
+
+  /* Add responsiveness */
+  @media (max-width: 768px) {
+    #otp-div {
+      width: 90%;
+      padding: 15px;
+    }
+
+    #otp-div h3 {
+      font-size: 1.5rem;
+    }
+
+    #otp-div button {
+      font-size: 1rem;
+      padding: 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #otp-div {
+      width: 100%;
+      padding: 10px;
+    }
+
+    #otp-div h3 {
+      font-size: 1.2rem;
+    }
+
+    #otp-div button {
+      font-size: 0.9rem;
+      padding: 8px;
+    }
+  }
+</style>
+<% layout('layouts/boilerplate')%>
+<div id="otp-div">
+  <h3>OTP Verification</h3>
+
+  <% if(errors && errors.length > 0){ %>
+  <ul>
+    <% errors.forEach(function(error){ %>
+    <li style="color: red"><%= error.msg %></li>
+    <% }) %>
+  </ul>
+  <% } %>
+
+  <form action="/otp" method="POST">
+    <div id="otp-form">
+      <label for="otp" class="form-label">Enter OTP</label>
+      <input
+        type="text"
+        name="otp"
+        class="form-control"
+        id="otp"
+        placeholder="Enter your OTP"
+        required
+      />
+    </div>
+    <button type="submit" class="btn">Verify OTP</button>
+  </form>
+
+  <p>Didn't receive OTP? <a href="/login">Login again</a></p>
+</div>

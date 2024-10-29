@@ -1,0 +1,271 @@
+<style>
+  /* Cart Container Styles */
+  #mycart .product-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Card Style */
+  #mycart .card {
+    width: 70%;
+    display: flex;
+    padding: 40px;
+    align-items: center;
+    flex-direction: row; /* Flex row for image and info alignment */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Box shadow around the card */
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease-in-out;
+  }
+
+  #mycart .card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Elevated shadow on hover */
+  }
+
+  /* Product Image on the Left */
+  #mycart .product-image {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-right: 1px solid #747474; /* Divider line */
+  }
+
+  /* Product Information on the Right */
+  #mycart .card-body {
+    padding: 15px;
+    flex: 1;
+  }
+
+  /* Flexbox for Row Elements */
+  #mycart .flex-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Modal Styles */
+  #mycart .confirm-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+  }
+
+  /* Backdrop overlay for modal */
+  #mycart .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 500;
+    display: none; /* Initially hidden */
+  }
+  #mycart #getquote {
+    justify-content: center;
+  }
+
+  #mycart #getquote button {
+    font-size: x-large;
+    font-weight: bold;
+  }
+
+  /* Responsive Design */
+  @media (min-width: 576px) {
+    #mycart .card-body {
+      margin-left: 40px;
+    }
+    #mycart .product-image {
+      padding-right: 40px;
+    }
+  }
+  @media (max-width: 576px) {
+    #mycart .product-image {
+      margin-top: 20px;
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-right: none;
+    }
+    #mycart .card {
+      width: 100%;
+      flex-direction: column;
+    }
+  }
+</style>
+
+<% layout('layouts/boilerplate') %>
+<div id="mycart">
+  <% if(cartProducts.length) { %>
+  <div class="product-container container my-3">
+    <h1 class="text-center mb-4">Your Cart</h1>
+    <% cartProducts.forEach(function(prd) { %>
+    <div class="card">
+      <!-- Product Image -->
+      <img src="<%= prd.image %>" alt="Product image" class="product-image" />
+
+      <!-- Product Information -->
+      <div class="card-body">
+        <h5 class="card-title"><%= prd.name %></h5>
+        <p><strong>Price:</strong> &#8377; <%= prd.price %> / <%= prd.per %></p>
+        <p>Quantity Left: <%= prd.qty %> <%= prd.per %></p>
+
+        <!-- Quantity Control -->
+        <div class="flex-row">
+          <label for="rqty-<%= prd._id %>" class="form-label mb-0"
+            >Quantity Required:</label
+          >
+          <button
+            type="button"
+            onclick="adjustQty('<%= prd._id %>', -1)"
+            class="btn btn-secondary btn-sm"
+          >
+            -
+          </button>
+          <input
+            id="rqty-<%= prd._id %>"
+            class="form-control text-center"
+            type="number"
+            name="rqty"
+            value="<%= prd.rqty %>"
+            min="1"
+            max="<%= prd.qty %>"
+            onchange="updateQty('<%= prd._id %>')"
+            style="width: 100px"
+          />
+          <button
+            type="button"
+            onclick="adjustQty('<%= prd._id %>', 1)"
+            class="btn btn-secondary btn-sm"
+          >
+            +
+          </button>
+        </div>
+
+        <!-- Remove Product Button -->
+        <button
+          type="button"
+          class="btn btn-danger mt-3"
+          onclick="showConfirmPrompt('<%= prd._id %>')"
+        >
+          Remove Product
+        </button>
+
+        <!-- Confirmation Modal -->
+        <div
+          id="confirmModal-<%= prd._id %>"
+          class="confirm-modal"
+          style="display: none"
+        >
+          <p>Are you sure you want to remove this product from your cart?</p>
+          <button
+            class="btn btn-danger"
+            onclick="confirmDelete('<%= prd._id %>')"
+          >
+            Yes, Remove
+          </button>
+          <button
+            class="btn btn-secondary"
+            onclick="closeConfirmPrompt('<%= prd._id %>')"
+          >
+            Cancel
+          </button>
+        </div>
+        <div
+          class="modal-backdrop"
+          id="backdrop-<%= prd._id %>"
+          style="display: none"
+        ></div>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+  <div class="text-center my-4 flex-row" id="getquote">
+    <form action="getquotation" method="get">
+      <button type="submit" class="btn btn-warning">Quotation</button>
+    </form>
+    <form action="buynow" method="get">
+      <button type="submit" class="btn btn-primary">Buy Now</button>
+    </form>
+  </div>
+  <% } else { %>
+  <div class="text-center my-5">
+    <h1>Your Cart is Empty</h1>
+    <a href="/shopping" class="btn btn-warning">Go to Shopping</a>
+  </div>
+  <% } %>
+</div>
+
+<script>
+  // Increment and Decrement Quantity
+  async function adjustQty(productId, change) {
+    const qtyInput = document.getElementById("rqty-" + productId);
+    let newQty = parseInt(qtyInput.value) + change;
+    const maxQty = parseInt(qtyInput.max);
+    if (newQty >= 1 && newQty <= maxQty) {
+      qtyInput.value = newQty;
+      await updateQty(productId); // Update backend on each change
+    }
+  }
+
+  // Update Quantity in Backend
+  async function updateQty(productId) {
+    const rqty = document.getElementById("rqty-" + productId).value;
+    try {
+      const response = await fetch(`/editreqqty/${productId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rqty }),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        // Show success message
+      } else {
+        console.error("Update failed:", result.message);
+        alert("Failed to update quantity.");
+      }
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+    }
+  }
+
+  // Confirm Deletion Prompt
+  function showConfirmPrompt(productId) {
+    document.getElementById("confirmModal-" + productId).style.display =
+      "block";
+    document.getElementById("backdrop-" + productId).style.display = "block";
+  }
+
+  function closeConfirmPrompt(productId) {
+    document.getElementById("confirmModal-" + productId).style.display = "none";
+    document.getElementById("backdrop-" + productId).style.display = "none";
+  }
+
+  // Confirm and Execute Deletion
+  async function confirmDelete(productId) {
+    closeConfirmPrompt(productId);
+    try {
+      const response = await fetch(`/deletecartproduct/${productId}`, {
+        method: "POST",
+      });
+      const result = await response.json();
+      if (response.ok) {
+        location.reload(); // Reload page to reflect changes
+      } else {
+        console.error("Deletion failed:", result.message);
+        alert("Failed to remove product.");
+      }
+    } catch (error) {
+      console.error("Error removing product:", error);
+    }
+  }
+</script>

@@ -1,0 +1,176 @@
+<style>
+  /* Product Container Styling */
+  #prddtl .product-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Product Image and Details */
+  #prddtl .product-image {
+    flex: 1 1 300px;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  #prddtl .product-details {
+    flex: 2 1 400px;
+    padding: 20px;
+  }
+
+  #prddtl .product-details h5 {
+    margin: 10px 0;
+    font-size: 1.5em;
+    color: #333;
+  }
+
+  #prddtl .product-details p {
+    margin: 8px 0;
+    color: #666;
+    font-size: 1rem;
+  }
+
+  /* Form Container Styling */
+  #prddtl .form-container {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Label Styling */
+  #prddtl .form-label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+    font-size: 1rem;
+  }
+
+  /* Input Styling */
+  #prddtl .form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+
+  #prddtl .form-control:focus {
+    border-color: #ffc107;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+  }
+
+  /* Button Styling */
+  #prddtl .btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #ffc107;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  #prddtl .btn:hover {
+    background-color: #e0a800;
+  }
+
+  /* Center Buttons */
+  .text-center {
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    #prddtl .product-container {
+      flex-direction: column;
+      padding: 10px;
+    }
+
+    #prddtl .product-details {
+      padding: 10px;
+    }
+
+    #prddtl .product-details h5 {
+      font-size: 1.3em;
+    }
+
+    #prddtl .product-details p {
+      font-size: 1rem;
+    }
+
+    #prddtl .form-container {
+      width: 90%;
+      padding: 15px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+    }
+  }
+</style>
+<% layout('layouts/boilerplate') %>
+<div id="prddtl">
+  <h1 style="text-align: center; margin-top: 20px">Product Details</h1>
+  <div class="product-container">
+    <div class="product-image">
+      <img
+        src="<%= product.image %>"
+        alt="Product image"
+        style="max-width: 70%"
+      />
+    </div>
+    <div class="product-details">
+      <h5><%= product.name %></h5>
+      <p>
+        <strong>Price:</strong> &#8377; <%= product.price %> / <%= product.per
+        %>
+      </p>
+      <p>Quantity Left: <%= product.qty %> <%= product.per %></p>
+      <p>Seller: <%= product.seller %></p>
+      <p>Product Description: <%= product.description %></p>
+    </div>
+  </div>
+
+  <!-- Add to Cart Form -->
+  <form
+    action="/addtocart/<%=product._id%>"
+    class="form-container"
+    method="post"
+  >
+    <div>
+      <label for="rqty" class="form-label">Required Quantity</label>
+      <input
+        id="rqty"
+        class="form-control"
+        type="number"
+        name="rqty"
+        max="<%=product.qty%>"
+        min="1"
+        required
+      />
+    </div>
+    <div class="text-center">
+      <button type="submit" class="btn btn-warning">Add to Cart</button>
+    </div>
+  </form>
+
+  <!-- Go to Shopping Button Centered -->
+  <div class="text-center" style="margin-top: 20px; margin-bottom: 20px">
+    <a href="/shopping">
+      <button type="button" class="btn btn-warning">Go to Shopping</button>
+    </a>
+  </div>
+</div>

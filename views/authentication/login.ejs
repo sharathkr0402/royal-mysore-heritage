@@ -1,0 +1,156 @@
+<style>
+  /* Container and form styling */
+  #login-div {
+    width: 40%;
+    min-width: 300px; /* Ensures a minimum width for smaller screens */
+    height: auto;
+    position: relative;
+    margin: 30px auto;
+    background-color: #f5f5dc;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  /* Form title */
+  #login-div h3 {
+    color: white;
+    background-color: #007bff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+  }
+
+  /* Form control alignment */
+  .form-label {
+    width: 100%;
+    text-align: left;
+  }
+
+  /* Flexbox layout for input fields */
+  .form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Flexbox layout for select fields */
+  .role-form {
+    margin-bottom: 1.5rem;
+  }
+
+  #login-form button {
+    font-weight: bold;
+    width: 100%;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    #login-div {
+      width: 90%;
+      padding: 20px;
+    }
+
+    #login-div h3 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .form-group,
+    .role-form {
+      display: block;
+      width: 100%;
+    }
+
+    #login-form button {
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    #login-div {
+      padding: 15px;
+    }
+
+    #login-div h3 {
+      font-size: 1.3rem;
+      padding: 8px;
+    }
+
+    .form-group label,
+    .role-form label {
+      font-size: 0.9rem;
+    }
+
+    #login-form button {
+      font-size: 0.9rem;
+    }
+  }
+</style>
+
+<% layout('layouts/boilerplate') %>
+
+<!-- Login form container -->
+<div id="login-div">
+  <h3 class="bg-primary">Login</h3>
+
+  <% if(success_msg){ %>
+  <p style="color: green"><%= success_msg %></p>
+  <% } %> <% if(error_msg){ %>
+  <p style="color: red"><%= error_msg %></p>
+  <% } %> <% if(errors && errors.length > 0){ %>
+  <ul>
+    <% errors.forEach(function(error){ %>
+    <li style="color: red"><%= error.msg %></li>
+    <% }) %>
+  </ul>
+  <% } %>
+
+  <!-- Login form -->
+  <form action="/login" method="POST" id="login-form">
+    <div class="role-form">
+      <label for="role" class="form-label"><b>Login as a</b></label>
+      <select id="role" name="role" required class="form-control form-select">
+        <option value="" selected>Please Select.....</option>
+        <option value="admin">Admin</option>
+        <option value="customer">Customer</option>
+      </select>
+    </div>
+    <div class="form-group email-form">
+      <label for="exampleInputEmail1" class="form-label"
+        ><b>Email address</b></label
+      >
+      <input
+        type="email"
+        name="email"
+        class="form-control"
+        value="<%= typeof email !== 'undefined' ? email : '' %>"
+        required
+        id="exampleInputEmail1"
+        aria-describedby="emailHelp"
+      />
+    </div>
+
+    <div class="form-group pass-form">
+      <label for="exampleInputPassword1" class="form-label"
+        ><b>Password</b></label
+      >
+      <input
+        type="password"
+        name="password"
+        value="<%= typeof password !== 'undefined' ? password : '' %>"
+        required
+        class="form-control"
+        id="exampleInputPassword1"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Request OTP</button>
+  </form>
+
+  <p class="mt-3">
+    Don't have an account? <a href="/register"><b>Register here</b></a>
+  </p>
+</div>

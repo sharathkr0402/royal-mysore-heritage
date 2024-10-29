@@ -1,0 +1,189 @@
+<style>
+  /* Dashboard Styling */
+  #dashboarddiv #dashboard {
+    margin: 40px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: antiquewhite;
+    text-align: center;
+  }
+
+  #dashboarddiv #dashboard h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  #dashboarddiv #dashboard p {
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+
+  #dashboarddiv ul button {
+    margin: 10px;
+    width: 100%; /* Adjusts to full width on small screens */
+    max-width: 250px;
+  }
+
+  #dashboarddiv ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #dashboarddiv ul li {
+    list-style-type: none;
+    margin: 10px;
+  }
+
+  /* Carousel Styling */
+  #dashboarddiv #carouselExample {
+    width: 100%;
+  }
+
+  #dashboarddiv .carousel-inner img {
+    height: 300px; /* Smaller height for mobile */
+    border-radius: 20px;
+  }
+
+  /* Image Form (Admin Only) */
+  #dashboarddiv #imageform {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  #imageform {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #imageform div {
+    margin: 10px;
+  }
+  /* Responsive Design for Buttons */
+  @media (max-width: 768px) {
+    #dashboarddiv #dashboard {
+      margin: 20px;
+      padding: 15px;
+    }
+
+    #dashboarddiv #dashboard h1 {
+      font-size: 1.5rem;
+    }
+
+    #dashboarddiv #dashboard p {
+      font-size: 0.9rem;
+    }
+
+    #dashboarddiv ul {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #dashboarddiv ul button {
+      max-width: 100%; /* Full width for smaller screens */
+      margin: 5px 0;
+    }
+
+    #dashboarddiv #carouselExample {
+      width: 100%;
+    }
+
+    #dashboarddiv .carousel-inner img {
+      height: 200px; /* Smaller height for mobile */
+    }
+  }
+</style>
+
+<% layout('layouts/boilerplate')%>
+<div id="dashboarddiv">
+  <div class="container mt-4">
+    <!-- Upload Form (Visible only for admin) -->
+    <% if (user.role === 'admin') { %>
+    <form
+      action="/upload"
+      method="POST"
+      enctype="multipart/form-data"
+      class="mb-4"
+      id="imageform"
+    >
+      <div class="form-group">
+        <input type="file" name="image" required class="form-control-file" />
+      </div>
+      <button type="submit" class="btn btn-primary">Upload Image</button>
+    </form>
+    <% } %>
+
+    <!-- Carousel -->
+    <div
+      id="carouselExample"
+      class="carousel slide"
+      data-ride="carousel"
+      data-interval="3000"
+    >
+      <div class="carousel-inner">
+        <% images.forEach((image, index) => { %>
+        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+          <img
+            src="/uploads/<%= image.filename %>"
+            class="d-block w-100"
+            alt="Image"
+          />
+          <div class="carousel-caption d-none d-md-block">
+            <% if (user.role === 'admin') { %>
+            <form action="/delete/<%= image._id %>" method="POST">
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+            <% } %>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <a
+        class="carousel-control-prev"
+        href="#carouselExample"
+        role="button"
+        data-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a
+        class="carousel-control-next"
+        href="#carouselExample"
+        role="button"
+        data-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+  </div>
+
+  <div id="dashboard" class="">
+    <h1>Welcome, <%= user.name %></h1>
+    <p>
+      This is the Admin dashboard where you can manage your Profile and Your
+      Customers.
+    </p>
+    <!-- Admin specific actions can go here -->
+    <ul type="none">
+      <li>
+        <a href="/profileDetails">
+          <button type="button" class="btn btn-primary">Manage Profile</button>
+        </a>
+      </li>
+      <li>
+        <a href="/allCustomers">
+          <button type="button" class="btn btn-primary">
+            Manage All Customers
+          </button>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Include JS for Carousel and Bootstrap functionality -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</div>
